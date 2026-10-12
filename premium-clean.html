@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050b1b">
+<title>ИИ-КОМПАНИЯ</title>
+<style>
+html,body{margin:0;min-height:100%;background:#050b1b;color:#eaf4ff;font:16px/1.5 system-ui,sans-serif}
+#opening{min-height:100vh;display:grid;place-content:center;text-align:center;padding:24px;box-sizing:border-box;background:radial-gradient(ellipse at center,#142952,#050b1b 66%)}
+#opening .mark{font-size:54px;color:#7edaff;text-shadow:0 0 32px #548bff}#opening h1{font-size:26px}#opening p{font-size:14px;color:#b3c7e7}#opening button{background:#215bc8;color:white;border:1px solid #73caff;border-radius:12px;padding:12px 20px;font:inherit;cursor:pointer}
+</style>
+</head><body>
+<div id="opening"><div class="mark">✧</div><h1>ИИ-КОМПАНИЯ</h1><p id="opening-status">Загружаем презентацию…</p><button hidden id="try-again" onclick="location.reload()">Повторить</button></div>
+<script>
+(async function mountPresentation(){
+  'use strict';
+  const repo='yurif73/skills-introduction-to-github';
+  const originalCommit='280208a01da20e65a1ebd1f5b41c0a81a9b3cc4d';
+  const artworkCommit='eb3c36979a46adda74ce08e3f73227c52f52d87a';
+  const raw='https://raw.githubusercontent.com/'+repo+'/';
+  const artwork=raw+artworkCommit+'/assets/portraits-clean/';
+  const keys=['sales','marketing','analytics','documents','support','operations'];
+  const portraits=Object.fromEntries(keys.map(k=>[k,artwork+k+'.avif']));
+  async function fetchText(url){
+    const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),25000);
+    try{const r=await fetch(url,{signal:ctrl.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.text();}
+    finally{clearTimeout(timeout);}
+  }
+  async function readOriginal(){
+    try{return await fetchText(raw+originalCommit+'/index.html');}
+    catch(rawError){
+      const json=JSON.parse(await fetchText('https://api.github.com/repos/'+repo+'/contents/index.html?ref='+originalCommit));
+      if(json.encoding!=='base64'||!json.content)throw rawError;
+      return new TextDecoder().decode(Uint8Array.from(atob(json.content.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+    }
+  }
+  try{
+    const source=await readOriginal();
+    if(!source.includes('id="workStart"')||!source.includes('class="hero-agent'))throw Error('Unexpected source page');
+    const doc=new DOMParser().parseFromString(source,'text/html');
+    // Only obsolete screenshot backgrounds are removed. Original sections,
+    // text, controls and demo handlers are kept from the pinned page.
+    for(const style of doc.querySelectorAll('style')){
+      const pos=style.textContent.indexOf('/* Same characters as in the approved AI-COMPANY');
+      if(pos>=0)style.textContent=style.textContent.slice(0,pos);
+    }
+    let count=0;
+    function picture(el,key,eager){
+      if(!el)throw Error('Missing portrait slot: '+key);
+      el.src=portraits[key];el.removeAttribute('srcset');el.decoding='async';
+      el.loading=eager?'eager':'lazy';el.dataset.character=key;
+      el.style.removeProperty('display');el.style.removeProperty('visibility');count++;
+    }
+    const heroMap={sales:'sales',analytics:'analytics',documents:'documents',support:'support',qa:'marketing',integrations:'operations'};
+    for(const card of doc.querySelectorAll('.hero-agent'))picture(card.querySelector('img'),heroMap[card.dataset.agent],true);
+    for(const card of doc.querySelectorAll('.dep-card'))picture(card.querySelector('img'),card.dataset.dep,false);
+    ['sales','analytics','documents','support'].forEach((key,i)=>picture(doc.querySelector('.mini-node.m'+(i+1)+' img'),key,false));
+    doc.querySelectorAll('.director-people .tiny-agent').forEach((card,i)=>picture(card.querySelector('img'),keys[i],false));
+    if(count!==22)throw Error('Portrait slot count: '+count);
+    const css=doc.createElement('style');css.id='clean-portraits-layout';
+    css.textContent=`
+      /* Six individual original portraits. No screenshot backgrounds. */
+      .hero-agent::before,.hero-agent::after,.dep-card::before,.dep-pic::before,.director-people .tiny-agent::before{content:none!important;display:none!important;background:none!important}
+      .hero-agent>img,.dep-pic>img,.mini-node .mini-face>img,.director-people .tiny-agent>img{display:block!important;visibility:visible!important;filter:none!important;mask-image:none!important;-webkit-mask-image:none!important;object-fit:cover!important;background:#08142d}
+      .hero-agent,.mini-node .mini-face,.director-people .tiny-agent{background-image:none!important}
+      .hero-copy{min-width:0}.hero-copy h1{font-size:clamp(32px,4.2vw,66px)!important;white-space:normal!important;line-height:1.06;max-width:100%;letter-spacing:-.05em}
+      .hero{column-gap:28px}.hero-theater{height:656px!important;margin-right:0!important;width:100%;min-width:0}
+      .hero-agent{width:29%!important;max-width:182px;height:198px!important;padding:0!important;border-radius:18px;overflow:hidden;color:#f4f8ff!important;box-shadow:0 10px 34px #0006,0 0 16px #368be32b!important}
+      .hero-agent>img{width:100%!important;height:146px!important;object-position:50% 0%!important;margin:0!important;border:0!important;border-radius:0!important}
+      .hero-agent .role{min-height:52px;height:52px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;padding:6px 9px!important;background:#0b1a36!important;border-top:1px solid #4582c960;backdrop-filter:none;color:#f0f6ff!important}
+      .hero-agent .role strong{color:#f3f8ff!important;font-size:12px}.hero-agent .role small{color:#b4d5ef!important;font-size:10px}
+      .hero-theater .h1{top:0!important;left:0!important}.hero-theater .h2{top:0!important;right:0!important}
+      .hero-theater .h3{top:calc(50% - 99px)!important;left:0!important}.hero-theater .h4{top:calc(50% - 99px)!important;right:0!important}
+      .hero-theater .h5{bottom:0!important;left:9%!important}.hero-theater .h6{bottom:0!important;right:9%!important}
+      .hero-theater .orb{top:50%!important;width:32%!important;height:auto!important;aspect-ratio:1;border-radius:50%}
+      .hero-theater .orb strong{font-size:clamp(14px,1.5vw,20px)!important}.hero-theater .orb small{font-size:10px}
+      .dep-card{position:relative;isolation:isolate}.dep-card .dep-pic{height:210px!important;flex:0 0 210px;position:relative;overflow:hidden;background:#08142d!important}
+      .dep-card .dep-pic>img{width:100%!important;height:100%!important;object-position:50% 0%!important}
+      .dep-card .dep-pic::after{background:linear-gradient(0deg,#0b1835bb,transparent 22%)!important;pointer-events:none}
+      .mini-node .mini-face{background:none!important}.mini-node .mini-face>img{width:35px!important;height:35px!important;object-position:50% 21%!important}
+      .director-people .tiny-agent>img{width:59px!important;height:65px!important;max-width:100%;object-position:50% 15%!important;margin:0 auto 5px!important}
+      .hero-agent .fallback{display:none!important}.wp-avatar img{display:block;width:45px;height:52px;object-fit:cover;object-position:center 12%;margin:0 auto;border-radius:12px;border:1px solid #6ca7d78a}
+      .hero-agent:focus-visible,.dep-card:focus-visible{outline:2px solid #9eeeff;outline-offset:3px}
+      @media(min-width:1191px){.hero{grid-template-columns:minmax(0,.93fr) minmax(0,1.07fr)!important}}
+      @media(max-width:1190px){.hero{grid-template-columns:1fr!important}.hero-theater{max-width:720px;margin:0 auto!important}.hero-theater .orb strong{font-size:20px!important}.hero-copy h1{font-size:clamp(38px,7vw,70px)!important}}
+      @media(max-width:550px){
+        .hero-copy h1{font-size:clamp(29px,8vw,43px)!important}.hero-copy .sub{font-size:26px!important}
+        .hero-theater{height:auto!important;padding-top:198px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;overflow:visible}
+        .hero-theater .hero-agent{position:relative!important;inset:auto!important;translate:0!important;width:100%!important;max-width:none!important;height:198px!important;animation:none}
+        .hero-theater .hero-agent>img{height:146px!important}.hero-theater .orb{position:absolute;top:90px!important;left:50%;width:150px!important;transform:translate(-50%,-50%)}
+        .hero-theater .orb strong{font-size:16px!important}.hero-web{display:none}.hero-theater .theater-light{inset:0}.hero-theater .theater-grid{display:none}
+        .dep-card .dep-pic{height:184px!important;flex-basis:184px}.director-people .tiny-agent>img{width:59px!important;height:65px!important}
+      }
+      @media(prefers-reduced-motion:reduce){.hero-agent,.orb,.hero-web path{animation:none!important}}
+    `;
+    doc.head.append(css);
+    doc.documentElement.dataset.release='clean-portraits-v3';
+    doc.body.dataset.portraits='22';
+    const enhancement=doc.createElement('script');
+    enhancement.textContent=`(function(){
+      const art=${JSON.stringify(portraits)};
+      document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',function(e){
+        const id=this.getAttribute('href').slice(1),target=document.getElementById(id);
+        if(target){e.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});}
+      }));
+      function updateTeamFaces(){
+        const key=typeof workKey==='string'?workKey:'sales';
+        const seq=({sales:[null,'sales','analytics','documents','marketing'],documents:[null,'documents','analytics','documents','marketing'],analytics:[null,'analytics','analytics','documents','marketing'],support:[null,'support','documents','support','marketing']})[key]||[null,'sales','analytics','documents','marketing'];
+        document.querySelectorAll('.wp-avatar').forEach((slot,i)=>{
+          const name=seq[i];if(!name)return;
+          if(slot.firstElementChild&&slot.firstElementChild.dataset.character===name)return;
+          const img=new Image();img.src=art[name];img.alt='';img.dataset.character=name;slot.replaceChildren(img);
+        });
+      }
+      document.querySelectorAll('[data-work],#workStart,#workReset').forEach(b=>b.addEventListener('click',()=>setTimeout(updateTeamFaces,0)));
+      document.querySelectorAll('.dep-card').forEach(b=>b.addEventListener('click',()=>setTimeout(updateTeamFaces,0)));
+      updateTeamFaces();
+      window.__sitePortraits={release:'clean-portraits-v3',count:22,assets:art};
+    })();`;
+    doc.body.append(enhancement);
+    const html='<!doctype html>\n'+doc.documentElement.outerHTML;
+    document.open();document.write(html);document.close();
+  }catch(error){
+    console.error('Presentation load error:',error);
+    const status=document.getElementById('opening-status');
+    if(status)status.textContent='Не удалось загрузить сайт. Нажмите «Повторить».';
+    const retry=document.getElementById('try-again');if(retry)retry.hidden=false;
+  }
+})();
+</script>
+</body></html>
