@@ -82,6 +82,69 @@ dialog{padding:0;background:linear-gradient(155deg,#132648,#0b1732);border:1px s
 @media(max-width:800px){.executive-highlights{grid-template-columns:1fr}.director-content{grid-template-columns:1fr}.director-activity{grid-column:auto}}
 @media(max-width:550px){.hero-agent{height:136px!important;width:132px!important}.hero-agent img{height:115px!important}.hero-agent .role{padding:8px 6px 6px}.exec-value{padding:16px}.director-people .tiny-agent img{width:65px;height:65px}}
 
+
+/* Same characters as in the approved AI-COMPANY presentation image. 
+   Six portraits are embedded as a 6-frame picture strip: sales, marketing,
+   analytics, documents, support, operations. All interaction/layout unchanged. */
+:root { --portrait-strip: url("https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp"); }
+.hero-agent > img,
+.dep-pic > img,
+.director-people .tiny-agent > img,
+.mini-node .mini-face > img { visibility:hidden!important; }
+.hero-agent .fallback { display:none!important; }
+/* Full agent scene */
+.hero-agent[data-agent="sales"]{--portrait-x:0%;}
+.hero-agent[data-agent="qa"]{--portrait-x:20%;}
+.hero-agent[data-agent="analytics"]{--portrait-x:40%;}
+.hero-agent[data-agent="documents"]{--portrait-x:60%;}
+.hero-agent[data-agent="support"]{--portrait-x:80%;}
+.hero-agent[data-agent="integrations"]{--portrait-x:100%;}
+.hero-agent::before {
+  content:"";position:absolute;left:0;right:0;top:0;bottom:22px;
+  border:1px solid #a3d9ff52;border-radius:inherit;pointer-events:none;
+  background-image:linear-gradient(180deg,transparent 48%,#08152e88),var(--portrait-strip);
+  background-size:100% 100%,600% 100%;background-position:center,var(--portrait-x,0%) center;
+  background-repeat:no-repeat;z-index:1;
+}
+/* All six commercial department tiles */
+.dep-card[data-dep="sales"]{--portrait-x:0%;}
+.dep-card[data-dep="marketing"]{--portrait-x:20%;}
+.dep-card[data-dep="analytics"]{--portrait-x:40%;}
+.dep-card[data-dep="documents"]{--portrait-x:60%;}
+.dep-card[data-dep="support"]{--portrait-x:80%;}
+.dep-card[data-dep="operations"]{--portrait-x:100%;}
+.dep-card .dep-pic::before {
+  content:"";position:absolute;inset:0;
+  background:var(--portrait-strip) var(--portrait-x,0%) center / 600% 100% no-repeat;
+  z-index:1;pointer-events:none;
+}
+.dep-card .dep-pic::after { z-index:2; }
+/* Overview diagram thumbnails */
+.mini-node.m1{--portrait-x:0%;}
+.mini-node.m2{--portrait-x:40%;}
+.mini-node.m3{--portrait-x:60%;}
+.mini-node.m4{--portrait-x:80%;}
+.mini-node .mini-face {
+  background:var(--portrait-strip) var(--portrait-x,0%) center / 600% 100% no-repeat;
+}
+/* Director's team dashboard: same character, every appearance */
+.director-people .tiny-agent:nth-child(1){--portrait-x:0%;}
+.director-people .tiny-agent:nth-child(2){--portrait-x:20%;}
+.director-people .tiny-agent:nth-child(3){--portrait-x:40%;}
+.director-people .tiny-agent:nth-child(4){--portrait-x:60%;}
+.director-people .tiny-agent:nth-child(5){--portrait-x:80%;}
+.director-people .tiny-agent:nth-child(6){--portrait-x:100%;}
+.director-people .tiny-agent::before {
+  content:"";display:block;width:59px;height:59px;max-width:100%;
+  margin:0 auto 5px;border-radius:9px;
+  background:var(--portrait-strip) var(--portrait-x,0%) center / 600% 100% no-repeat;
+  box-shadow:0 0 11px #329aff56;
+}
+@media(max-width:550px){
+  .hero-agent::before { bottom:15px; }
+  .director-people .tiny-agent::before { width:65px;height:65px; }
+}
+
 </style>
 </head>
 <body>
@@ -106,12 +169,12 @@ dialog{padding:0;background:linear-gradient(155deg,#132648,#0b1732);border:1px s
 <div class="theater-light"></div><div class="theater-grid"></div>
 <svg class="hero-web" viewBox="0 0 650 540" preserveAspectRatio="none" aria-hidden="true"><path id="a1" d="M325 255 Q220 105 130 90"/><path id="a2" d="M325 255 Q440 110 540 89"/><path id="a3" d="M325 255 Q170 225 90 266"/><path id="a4" d="M325 255 Q485 235 560 268"/><path id="a5" d="M325 255 Q225 400 165 465"/><path id="a6" d="M325 255 Q430 413 495 465"/><circle class="spark" r="5"><animateMotion dur="3.3s" repeatCount="indefinite" path="M130 90 Q220 105 325 255"/></circle><circle class="spark" r="5"><animateMotion dur="4.1s" repeatCount="indefinite" path="M540 89 Q440 110 325 255"/></circle><circle class="spark" r="5"><animateMotion dur="3.7s" repeatCount="indefinite" path="M90 266 Q170 225 325 255"/></circle><circle class="spark" r="5"><animateMotion dur="4.3s" repeatCount="indefinite" path="M560 268 Q485 235 325 255"/></circle><circle class="spark" r="5"><animateMotion dur="4.8s" repeatCount="indefinite" path="M165 465 Q225 400 325 255"/></circle><circle class="spark" r="5"><animateMotion dur="4s" repeatCount="indefinite" path="M495 465 Q430 413 325 255"/></circle></svg>
 <div class="orb"><div class="orb-mark">✧</div><strong>ВАША<br>ИИ-КОМАНДА</strong><small>Ваши поручения<br>Всё под контролем</small></div>
-<button class="hero-agent h1" data-agent="sales"><img loading="lazy" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация агента продаж"><span class="fallback">👩🏻‍💼</span><span class="role"><strong>Агент продаж</strong><small>Заявки, КП и CRM</small></span></button>
-<button class="hero-agent h2" data-agent="analytics"><img loading="lazy" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация агента аналитики"><span class="fallback">👨🏻‍💻</span><span class="role"><strong>Агент аналитики</strong><small>Данные и отчёты</small></span></button>
-<button class="hero-agent h3" data-agent="documents"><img loading="lazy" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация агента документов"><span class="fallback">👩🏼‍💻</span><span class="role"><strong>Агент документов</strong><small>Проверка файлов</small></span></button>
-<button class="hero-agent h4" data-agent="support"><img loading="lazy" src="https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация агента поддержки"><span class="fallback">🎧</span><span class="role"><strong>Агент поддержки</strong><small>Ответы клиентам</small></span></button>
-<button class="hero-agent h5" data-agent="qa"><img loading="lazy" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация контролёра качества"><span class="fallback">🛡</span><span class="role"><strong>Контроль качества</strong><small>Проверки и риски</small></span></button>
-<button class="hero-agent h6" data-agent="integrations"><img loading="lazy" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=370&h=300&q=85" alt="Иллюстрация агента интеграций"><span class="fallback">🔗</span><span class="role"><strong>Интеграции</strong><small>CRM, 1С и сервисы</small></span></button>
+<button class="hero-agent h1" data-agent="sales"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация агента продаж"><span class="fallback">👩🏻‍💼</span><span class="role"><strong>Агент продаж</strong><small>Заявки, КП и CRM</small></span></button>
+<button class="hero-agent h2" data-agent="analytics"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация агента аналитики"><span class="fallback">👨🏻‍💻</span><span class="role"><strong>Агент аналитики</strong><small>Данные и отчёты</small></span></button>
+<button class="hero-agent h3" data-agent="documents"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация агента документов"><span class="fallback">👩🏼‍💻</span><span class="role"><strong>Агент документов</strong><small>Проверка файлов</small></span></button>
+<button class="hero-agent h4" data-agent="support"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация агента поддержки"><span class="fallback">🎧</span><span class="role"><strong>Агент поддержки</strong><small>Ответы клиентам</small></span></button>
+<button class="hero-agent h5" data-agent="qa"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация контролёра качества"><span class="fallback">🛡</span><span class="role"><strong>Контроль качества</strong><small>Проверки и риски</small></span></button>
+<button class="hero-agent h6" data-agent="integrations"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Иллюстрация агента интеграций"><span class="fallback">🔗</span><span class="role"><strong>Интеграции</strong><small>CRM, 1С и сервисы</small></span></button>
 </div>
 </section>
 <section class="service-band" id="connections"><div class="wrap"><div class="service-band-title"><strong>Работаем с привычными сервисами</strong><small>Планируемые подключения для бизнеса</small></div><div class="service-items">
@@ -128,21 +191,21 @@ dialog{padding:0;background:linear-gradient(155deg,#132648,#0b1732);border:1px s
 <div class="arch-grid">
 <div class="panel flow-panel"><h3>Запросы и данные</h3><div class="flow-items"><div class="flow-item"><span class="flow-icon">👥</span><div><b>Клиенты</b><small>Заявки, письма, звонки</small></div></div><div class="flow-item"><span class="flow-icon">📊</span><div><b>Битрикс24 и amoCRM</b><small>Заявки, сделки, контакты</small></div></div><div class="flow-item"><span class="flow-icon">📄</span><div><b>Документы</b><small>Договоры, счета, файлы</small></div></div><div class="flow-item"><span class="flow-icon">🔗</span><div><b>VK / MAX / 1С</b><small>Сообщения, учёт, задачи</small></div></div></div></div>
 <div class="panel flow-mid"><svg class="mini-network" viewBox="0 0 560 360" preserveAspectRatio="none" aria-hidden="true"><path d="M280 170 Q200 98 90 75"/><path d="M280 170 Q350 95 470 80"/><path d="M280 170 Q185 256 88 280"/><path d="M280 170 Q390 257 475 279"/></svg>
-<div class="mini-node m1"><span class="mini-face"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=90&h=90&q=70" alt=""></span><b>Продажи</b></div>
-<div class="mini-node m2"><span class="mini-face"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=90&h=90&q=70" alt=""></span><b>Аналитика</b></div>
-<div class="mini-node m3"><span class="mini-face"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=90&h=90&q=70" alt=""></span><b>Документы</b></div>
-<div class="mini-node m4"><span class="mini-face"><img src="https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=90&h=90&q=70" alt=""></span><b>Поддержка</b></div>
+<div class="mini-node m1"><span class="mini-face"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></span><b>Продажи</b></div>
+<div class="mini-node m2"><span class="mini-face"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></span><b>Аналитика</b></div>
+<div class="mini-node m3"><span class="mini-face"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></span><b>Документы</b></div>
+<div class="mini-node m4"><span class="mini-face"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></span><b>Поддержка</b></div>
 <div class="flow-core"><div style="font-size:30px">✧</div><strong>ИИ‑команда</strong><small>Принимает → работает → проверяет</small></div><div class="mini-caption">Световые линии показывают движение задач между сотрудниками</div></div>
 <div class="panel flow-panel"><h3>Результаты</h3><div class="flow-items"><div class="flow-item"><span class="flow-icon">📈</span><div><b>Продажи</b><small>Подготовленные предложения</small></div></div><div class="flow-item"><span class="flow-icon">🧠</span><div><b>Аналитика</b><small>Проверяемые отчёты</small></div></div><div class="flow-item"><span class="flow-icon">✅</span><div><b>Документы</b><small>Проверка и маршрутизация</small></div></div><div class="flow-item"><span class="flow-icon">🛡</span><div><b>Контроль</b><small>Согласования и журнал</small></div></div></div></div>
 </div></section>
 <section id="directions" class="wrap section"><div class="section-intro"><div><div class="eyebrow">02 / Направления</div><h2>Команда, которая берёт работу на себя</h2></div><p>Посмотрите, какие задачи можно делегировать цифровым специалистам — от продаж и маркетинга до документов и ежедневных процессов.</p></div>
 <div class="departments">
-<button class="dep-card" data-dep="sales" aria-pressed="true"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Продажи</h3><p>КП, заявки, Битрикс24, amoCRM</p><small>Обрабатывать обращения ↗</small></div></button>
-<button class="dep-card" data-dep="marketing" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Маркетинг</h3><p>VK, MAX, контент, реклама</p><small>Работать с аудиторией ↗</small></div></button>
-<button class="dep-card" data-dep="analytics" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Аналитика</h3><p>Данные, отчёты, выводы</p><small>Проверять данные ↗</small></div></button>
-<button class="dep-card" data-dep="documents" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Документы</h3><p>Договоры, счета, проверка</p><small>Проверять комплекты ↗</small></div></button>
-<button class="dep-card" data-dep="support" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Поддержка</h3><p>Почта, VK, MAX, клиенты</p><small>Работать с запросами ↗</small></div></button>
-<button class="dep-card" data-dep="operations" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=290&h=270&q=82" alt=""></div><div class="dep-card-content"><h3>Операции</h3><p>1С, контроль, сроки</p><small>Контролировать процессы ↗</small></div></button>
+<button class="dep-card" data-dep="sales" aria-pressed="true"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Продажи</h3><p>КП, заявки, Битрикс24, amoCRM</p><small>Обрабатывать обращения ↗</small></div></button>
+<button class="dep-card" data-dep="marketing" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Маркетинг</h3><p>VK, MAX, контент, реклама</p><small>Работать с аудиторией ↗</small></div></button>
+<button class="dep-card" data-dep="analytics" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Аналитика</h3><p>Данные, отчёты, выводы</p><small>Проверять данные ↗</small></div></button>
+<button class="dep-card" data-dep="documents" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Документы</h3><p>Договоры, счета, проверка</p><small>Проверять комплекты ↗</small></div></button>
+<button class="dep-card" data-dep="support" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Поддержка</h3><p>Почта, VK, MAX, клиенты</p><small>Работать с запросами ↗</small></div></button>
+<button class="dep-card" data-dep="operations" aria-pressed="false"><div class="dep-pic"><img loading="lazy" src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt=""></div><div class="dep-card-content"><h3>Операции</h3><p>1С, контроль, сроки</p><small>Контролировать процессы ↗</small></div></button>
 </div>
 <div class="panel dep-detail" aria-live="polite"><div><div class="eyebrow" style="font-size:10px;margin-bottom:4px">Возможности направления</div><h3 id="selectedName">Продажи</h3><p id="selectedDescription">Принимает заявки из CRM, почты и сайта. Готовит предложения, которые проверяет менеджер.</p></div><div><div class="role-pills" id="selectedRoles"><span>Координатор</span><span>Агент КП</span><span>Контролёр</span></div></div><div><a href="#demo" class="btn btn-outline btn-small" id="selectedDemo">▶ Смотреть процесс</a></div></div>
 </section>
@@ -195,12 +258,12 @@ dialog{padding:0;background:linear-gradient(155deg,#132648,#0b1732);border:1px s
 </div>
 </div>
 <div class="dash-section director-people"><h4>Ваши цифровые специалисты</h4><div class="tiny-agents">
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент продаж">Продажи<small>Готов</small></div>
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент маркетинга">Маркетинг<small>Готов</small></div>
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент аналитики">Аналитика<small>Готов</small></div>
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент документов">Документы<small>Готов</small></div>
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент поддержки">Поддержка<small>Готов</small></div>
-<div class="tiny-agent"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=110&h=110&q=72" alt="Агент операций">Операции<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент продаж">Продажи<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент маркетинга">Маркетинг<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент аналитики">Аналитика<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент документов">Документы<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент поддержки">Поддержка<small>Готов</small></div>
+<div class="tiny-agent"><img src="https://raw.githubusercontent.com/yurif73/skills-introduction-to-github/ai-company-premium/assets/team-portraits.webp" alt="Агент операций">Операции<small>Готов</small></div>
 </div></div>
 <div class="dash-section director-activity"><h4>Результаты вместо рутины</h4><div id="dashEvents">
 <div class="event"><b>14:32</b> Подготовлено КП для согласования</div>
